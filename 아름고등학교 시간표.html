@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+
+<!--ui-->
+<head>
+    <style>
+    body {
+  font-family: sans-serif;
+  background-color: #f0f2f5;
+}
+
+table {
+  border-collapse: collapse;
+  margin: 20px auto;
+}
+
+td, th {
+  border: 1px solid #aaa;
+  width: 80px;
+  height: 50px;
+  text-align: center;
+}
+
+th {
+  background-color: #dcdcdc;
+}
+
+td {
+  background-color: #ffffff;
+}
+  </style>
+</head>
+
+<body>
+    <select id="classSelect" onchange="changeClass(this.value)">
+  <option value="">반 선택</option>
+  <option value="2-1">2-1</option>
+  <option value="2-2">2-2</option>
+  <option value="2-3">2-3</option>
+  <option value="2-4">2-4</option>
+  <option value="2-5">2-5</option>
+  <option value="2-6">2-6</option>
+  <option value="2-7">2-7</option>
+  <option value="2-8">2-8</option>
+  <option value="2-9">2-9</option>
+  <option value="2-10">2-10</option>
+  <option value="2-11">2-11</option>
+  <option value="2-12">2-12</option>
+</select>
+
+<select id="studentSelect" onchange="selectStudent(this.value)">
+  <option value="">번호 선택</option>
+</select>
+    
+  <table id="timetable"></table>
+
+    <script>
+    //1반 기본시간표
+    const baseTimetable_2_1 = [
+    ["영어","대수","체육","문학","A","B",""],
+    ["A","C","대수","영어","일본어","B","C"],
+    ["문학","영어","대수","C","일본어","체육",""],
+    ["B","C","일본어","A","문학","대수","영어"],
+    ["일본어","문학","B","A","창체","창체",""]
+    ];
+    //2반 기본시간표
+    const baseTimetable_2_2 = [
+    ["","","","","A","B",""],
+    ["A","C","","","","B","C"],
+    ["","","","C","","",""],
+    ["B","C","","A","","",""],
+    ["","","B","A","창체","창체",""]
+    ];
+    //3반 기본시간표
+    const baseTimetable_2_3 = [
+    ["","","","","A","B",""],
+    ["A","C","","","","B","C"],
+    ["","","","C","","",""],
+    ["B","C","","A","","",""],
+    ["","","B","A","창체","창체",""]
+    ];
+    //4반 기본시간표
+    const baseTimetable_2_4 = [
+    ["","","","","A","B",""],
+    ["A","C","","","","B","C"],
+    ["","","","C","","",""],
+    ["B","C","","A","","",""],
+    ["","","B","A","창체","창체",""]
+    ];
+    //5반 기본시간표
+    const baseTimetable_2_5 = [
+    ["","","","","A","B",""],
+    ["A","C","","","","B","C"],
+    ["","","","C","","",""],
+    ["B","C","","A","","",""],
+    ["","","B","A","창체","창체",""]
+    ];
+    //6반 기본시간표    
+    const baseTimetable_2_6 = [
+    ["","","","","A","B",""],
+    ["A","C","","","","B","C"],
+    ["","","","C","","",""],
+    ["B","C","","A","","",""],
+    ["","","B","A","창체","창체",""]
+    ];  
+    //7반 기본시간표
+    const baseTimetable_2_7 = [
+    ["","","","","A","B",""],
+    ["A","C","","","","B","C"],
+    ["","","","C","","",""],
+    ["B","C","","A","","",""],
+    ["","","B","A","창체","창체",""]
+    ];
+    //8반 기본시간표
+    const baseTimetable_2_8 = [
+    ["","","","","A","B",""],
+    ["A","C","","","","B","C"],
+    ["","","","C","","",""],
+    ["B","C","","A","","",""],
+    ["","","B","A","창체","창체",""]
+    ];
+    //9반 기본시간표
+    const baseTimetable_2_9 = [
+    ["","","","","A","B",""],
+    ["A","C","","","","B","C"],
+    ["","","","C","","",""],
+    ["B","C","","A","","",""],
+    ["","","B","A","창체","창체",""]
+    ];
+    //10반 기본 시간표
+    const baseTimetable_2_10 = [
+    ["문학","프로그래밍","프로그래밍","대수","A","B",""],
+    ["A","C","대수","문학","영어","B","C"],
+    ["대수","체육","프로그래밍","C","문학","영어",""],
+    ["B","C","문학","A","영어","대수","프로그래밍"],
+    ["영어","체육","B","A","창체","창체",""]
+    ];
+    //11반 기본 시간표
+    const baseTimetable_2_11 = [
+    ["","","","","A","B",""],
+    ["A","C","","","","B","C"],
+    ["","","","C","","",""],
+    ["B","C","","A","","",""],
+    ["","","B","A","창체","창체",""]
+    ];
+    //12반 기본 시간표
+    const baseTimetable_2_12 = [
+    ["","","","","A","B",""],
+    ["A","C","","","","B","C"],
+    ["","","","C","","",""],
+    ["B","C","","A","","",""],
+    ["","","B","A","창체","창체",""]
+    ];
+    
+    //반별 시간표      
+    const baseTimetables = {
+    "2-1": baseTimetable_2_1,   // 나중에 각각 넣기
+    "2-2": baseTimetable_2_2,
+    "2-3": baseTimetable_2_3,
+    "2-4": baseTimetable_2_4,
+    "2-5": baseTimetable_2_5,
+    "2-6": baseTimetable_2_6,
+    "2-7": baseTimetable_2_7,
+    "2-8": baseTimetable_2_8,
+    "2-9": baseTimetable_2_9,
+    "2-10": baseTimetable_2_10,
+    "2-11": baseTimetable_2_11,
+    "2-12": baseTimetable_2_12
+    };
+    //개인 선택 과목 
+    const classes = {
+    "2-10": {
+    "1": { A: "화학(12반)", B: "생명과학(10반)", C: "물리학(9반)" },
+    "2": { A: "생명과학(9반)", B: "물리학(2반)", C: "화학(10반)" },
+    "3": { A: "화학(반)", B: "물리학(반)", C: "생명과학(반)" },
+    "4": { A: "세계시민과 지리(4반)", B: "윤리와 사상(반)", C: "사회와 문화(반)" },
+    "5": { A: "화학(반)", B: "물리학(반)", C: "사회와 문화(반)" },
+    "6": { A: "물리학(반)", B: "윤리와 사상(반)", C: "지구과학(반)" },
+    "7": { A: "물리학(반)", B: "화학(반)", C: "생명과학(반)" },
+    "8": { A: "지구과학(반)", B: "물리학(반)", C: "세계시민과 지리(반)" },
+    "9": { A: "생명과학(반)", B: "화학(반)", C: "물리학(반)" },
+    "10": { A: "윤리와 사상(반)", B: "세계시민과 지리(반)", C: "사회와 문화(반)" },
+    "11": { A: "화학(반)", B: "물리학(반)", C: "지구과학(반)" },
+    "12": { A: "화학(반)", B: "물리학(반)", C: "생명과학(반)" },
+    "13": { A: "윤리와 사상(반)", B: "사회와 문화(반)", C: "세계사(반)" },
+    "14": { A: "물리학(반)", B: "화학(반)", C: "생명과학(반)" },
+    "15": { A: "화학(반)", B: "생명과학(반)", C: "윤리와 사상(반)" },
+    "16": { A: "생명과학(반)", B: "화학(반)", C: "물리학(반)" },
+    "17": { A: "물리학(반)", B: "생명과학(반)", C: "화학(반)" },
+    "18": { A: "물리학(반)", B: "지구과학(반)", C: "화학(반)" },
+    "19": { A: "물리학(반)", B: "생명과학(반)", C: "화학(반)" },
+    "20": { A: "물리학(반)", B: "화학(반)", C: "사회와 문화(반)" },
+    "21": { A: "세계시민과 지리(반)", B: "사회와 문화(반)", C: "세계사(반)" },
+    "22": { A: "화학(반)", B: "윤리와 사상(반)", C: "생명과학(반)" },
+    "23": { A: "화학(반)", B: "물리학(반)", C: "지구과학(반)" },
+    "24": { A: "사회와 문화(반)", B: "물리학(반)", C: "화학(반)" },
+    "25": { A: "사회와 문화(반)", B: "생명과학(반)", C: "지구과학(반)" },
+    "26": { A: "세계사(반)", B: "사회와 문화(반)", C: "생명과학(반)" },
+    "27": { A: "화학(반)", B: "물리학(반)", C: "지구과학(반)" },
+    "28": { A: "화학(반)", B: "물리학(반)", C: "세계사(반)" }
+  }
+};
+    
+       function changeClass(className) {
+  localStorage.setItem("selectedClass", className);
+
+  const studentSelect = document.getElementById("studentSelect");
+  studentSelect.innerHTML = '<option value="">번호 선택</option>';
+
+  if (!classes[className]) {
+    showTimetable(null);
+    return;
+  }
+
+  const students = Object.keys(classes[className]);
+
+  students.forEach(num => {
+    let option = document.createElement("option");
+    option.value = num;
+    option.textContent = num + "번";
+    studentSelect.appendChild(option);
+  });
+    showTimetable(null);
+}
+        function selectStudent(num) {
+  const className = document.getElementById("classSelect").value;
+
+  localStorage.setItem("selectedStudent", num);
+
+  if (!classes[className] || !classes[className][num]) return;
+
+  showTimetable(classes[className][num]);
+}
+
+
+            
+            function showTimetable(studentData) {
+  const table = document.getElementById("timetable");
+  const className = document.getElementById("classSelect").value;
+
+  // 반 안 선택했으면 "표만" 보여주기
+  if (!className) {
+  table.innerHTML = `
+    <tr>
+      <th></th>
+      <th>월</th><th>화</th><th>수</th><th>목</th><th>금</th>
+    </tr>
+  `;
+
+  for (let i = 0; i < 7; i++) {
+    let row = table.insertRow();
+    row.insertCell().innerText = (i + 1) + "교시";
+
+    for (let j = 0; j < 5; j++) {
+      row.insertCell().innerText = "";
+    }
+  }
+
+  return;
+}
+
+  const base = baseTimetables[className];
+  if (!base) return;
+
+  table.innerHTML = `
+    <tr>
+      <th></th>
+      <th>월</th><th>화</th><th>수</th><th>목</th><th>금</th>
+    </tr>
+  `;
+
+  for (let i = 0; i < 7; i++) {
+    let row = table.insertRow();
+    row.insertCell().innerText = (i + 1) + "교시";
+
+    for (let j = 0; j < 5; j++) {
+      let cell = row.insertCell();
+
+    let raw = base[j][i] || ""; //원래 값(A/B/C 확인용)
+    let value = studentData ? (studentData[raw] || raw) : raw;
+    
+    //기본 텍스트
+    cell.innerText = value;
+    
+    //선택과목이면 색 넣기
+    if (raw === "A" || raw === "B" || raw === "C") {
+      cell.style.backgroundColor = "#fdf7cd";
+    }
+    }
+  }
+}
+
+    
+
+        
+window.onload = function() {
+  showTimetable(null);  
+    
+  const savedClass = localStorage.getItem("selectedClass");
+  const savedStudent = localStorage.getItem("selectedStudent");
+
+  if (savedClass) {
+    document.getElementById("classSelect").value = savedClass;
+    changeClass(savedClass);
+
+    setTimeout(() => {
+      if (savedStudent) {
+        document.getElementById("studentSelect").value = savedStudent;
+        selectStudent(savedStudent);
+      }
+    }, 0);
+  }
+};
+  </script>
+
+    
+</body>
+</html>
